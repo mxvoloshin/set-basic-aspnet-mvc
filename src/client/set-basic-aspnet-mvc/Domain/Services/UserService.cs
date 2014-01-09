@@ -17,7 +17,7 @@ namespace set_basic_aspnet_mvc.Domain.Services
         Task<bool> Authenticate(string email, string password);
         Task<bool> ChangeStatus(long userId, long updatedBy, bool isActive);
 
-        Task<bool> IsEmailExists(string email);
+        Task<bool> IsUserWithEmailExists(string email);
         Task<bool> RequestPasswordReset(string email);
         Task<bool> IsPasswordResetRequestValid(string email, string token);
         Task<bool> ChangePassword(string email, string token, string password);
@@ -122,9 +122,13 @@ namespace set_basic_aspnet_mvc.Domain.Services
             var user = _userRepo.FindOne(x => x.Email == email);
             return Task.FromResult(user);
         }
-        public async Task<bool> IsEmailExists(string email)
+        
+        public async Task<bool> IsUserWithEmailExists(string email)
         {
-            return await Task.FromResult(false);
+            if (!email.IsEmail()) throw new Exception("email is incorrect format");
+
+            var user = _userRepo.FindOne(x => x.Email.Equals(email));
+            return user != null ? await Task.FromResult(true) : await Task.FromResult(false);
         }
 
         public async Task<bool> RequestPasswordReset(string email)
