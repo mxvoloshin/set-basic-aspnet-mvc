@@ -178,10 +178,11 @@ namespace set_basic_aspnet_mvc.test.Services
             const string email ="test@test.com";
 
             var userRepository = new Mock<IRepository<User>>();
-          //Emin Değilim..
+            userRepository.Setup(x=>x.FindOne(It.IsAny<Expression<Func<User, bool>>>())).Returns(new User { Email = email});          
+            
             // Act
             var userService = new UserService(userRepository.Object);
-            var user = await userService.IsEmailExists(email);
+            var user = await userService.IsUserWithEmailExists(email);
 
             // Assert
             Assert.NotNull(user);
