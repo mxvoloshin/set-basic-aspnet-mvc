@@ -77,6 +77,8 @@ namespace set_basic_aspnet_mvc.Domain.Services
 
         public Task<PagedList<Feedback>> GetFeedbacks(int lastId, int page, bool isReviewed = false)
         {
+            _feedbackRepo.FindAll(x => x.Id > lastId);
+
             var items = page < 1 ? _feedbackRepo.FindAll()
                                  : _feedbackRepo.FindAll(x => x.Id > lastId);
 
